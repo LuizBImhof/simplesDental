@@ -8,13 +8,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -60,12 +66,16 @@ public class ProductControllerTest {
 
     @Test
     void shouldGetAllProducts() throws Exception {
-        when(productService.findAll()).thenReturn(Arrays.asList(product));
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Product> productPage = new PageImpl<>(List.of(product), pageable, 1);
+        when(productService.findAll(any(Pageable.class))).thenReturn(productPage);
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(product.getId()))
-                .andExpect(jsonPath("$[0].name").value(product.getName()));
+                .andExpect(jsonPath("$.content[0].id").value(product.getId()))
+                .andExpect(jsonPath("$.content[0].name").value(product.getName()))
+                .andExpect(jsonPath("$.content",hasSize(1)));
     }
 
     @Test
