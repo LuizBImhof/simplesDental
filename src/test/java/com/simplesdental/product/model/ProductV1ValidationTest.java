@@ -1,5 +1,6 @@
 package com.simplesdental.product.model;
 
+import com.simplesdental.product.model.Product.ProductV1;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -12,85 +13,85 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 
-public class ProductValidationTest {
+public class ProductV1ValidationTest {
 
     private Validator validator;
-    private Product product;
+    private ProductV1 productV1;
 
     @BeforeEach
     void setUp(){
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
 
-        product = new Product();
-        product.setId(1L);
-        product.setName("Test Product");
-        product.setDescription("Test Description");
-        product.setPrice(new BigDecimal("19.99"));
-        product.setStatus(true);
-        product.setCode("TP001");
-        product.setCategory(new Category());
+        productV1 = new ProductV1();
+        productV1.setId(1L);
+        productV1.setName("Test Product");
+        productV1.setDescription("Test Description");
+        productV1.setPrice(new BigDecimal("19.99"));
+        productV1.setStatus(true);
+        productV1.setCode("TP001");
+        productV1.setCategory(new Category());
 
     }
 
     @Test
     void shouldCreateProductWithCorrectArguments() {
 
-        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        Set<ConstraintViolation<ProductV1>> violations = validator.validate(productV1);
         Assertions.assertTrue(violations.isEmpty());
     }
     @Test
     void shouldNotCreateProductWithNullName() {
-        product.setName(null);
+        productV1.setName(null);
 
-        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        Set<ConstraintViolation<ProductV1>> violations = validator.validate(productV1);
         Assertions.assertFalse(violations.isEmpty());
     }
     @Test
     void shouldNotCreateProductWithEmptyName() {
-        product.setName(" ");
+        productV1.setName(" ");
 
-        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        Set<ConstraintViolation<ProductV1>> violations = validator.validate(productV1);
         Assertions.assertFalse(violations.isEmpty());
     }
 
     @Test
     void shouldNotCreateProductWithLongName() {
-        product.setName("A".repeat(101));
+        productV1.setName("A".repeat(101));
 
-        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        Set<ConstraintViolation<ProductV1>> violations = validator.validate(productV1);
         Assertions.assertFalse(violations.isEmpty());
     }
 
     @Test
     void shouldNotCreateProductWithLongDescription() {
-        product.setDescription("A".repeat(256));
+        productV1.setDescription("A".repeat(256));
 
-        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        Set<ConstraintViolation<ProductV1>> violations = validator.validate(productV1);
         Assertions.assertFalse(violations.isEmpty());
     }
 
     @Test
     void shouldNotCreateProductWithNegativeValue() {
-        product.setPrice(BigDecimal.valueOf(-1));
+        productV1.setPrice(BigDecimal.valueOf(-1));
 
-        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        Set<ConstraintViolation<ProductV1>> violations = validator.validate(productV1);
         Assertions.assertFalse(violations.isEmpty());
     }
 
     @Test
     void shouldNotCreateProductWithStatusNull() {
-        product.setStatus(null);
+        productV1.setStatus(null);
 
-        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        Set<ConstraintViolation<ProductV1>> violations = validator.validate(productV1);
         Assertions.assertFalse(violations.isEmpty());
     }
 
     @Test
     void shouldNotCreateProductWithCategoryNull() {
-        product.setCategory(null);
+        productV1.setCategory(null);
 
-        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+        Set<ConstraintViolation<ProductV1>> violations = validator.validate(productV1);
         Assertions.assertFalse(violations.isEmpty());
     }
 

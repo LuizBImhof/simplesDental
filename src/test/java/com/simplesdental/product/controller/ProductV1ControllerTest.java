@@ -2,7 +2,7 @@ package com.simplesdental.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplesdental.product.model.Category;
-import com.simplesdental.product.model.Product;
+import com.simplesdental.product.model.Product.ProductV1;
 import com.simplesdental.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
-public class ProductControllerTest {
+public class ProductV1ControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,54 +39,54 @@ public class ProductControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private Product product;
+    private ProductV1 productV1;
 
     @BeforeEach
     void setUp() {
-        product = new Product();
-        product.setId(1L);
-        product.setName("Test Product");
-        product.setDescription("Test Description");
-        product.setPrice(new BigDecimal("19.99"));
-        product.setStatus(true);
-        product.setCode("TP001");
-        product.setCategory(new Category());
+        productV1 = new ProductV1();
+        productV1.setId(1L);
+        productV1.setName("Test Product");
+        productV1.setDescription("Test Description");
+        productV1.setPrice(new BigDecimal("19.99"));
+        productV1.setStatus(true);
+        productV1.setCode("TP001");
+        productV1.setCategory(new Category());
     }
 
     @Test
     void shouldCreateProduct() throws Exception {
-        when(productService.save(any(Product.class))).thenReturn(product);
+        when(productService.save(any(ProductV1.class))).thenReturn(productV1);
 
         mockMvc.perform(post("/api/products")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(product)))
+                .content(objectMapper.writeValueAsString(productV1)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(product.getId()))
-                .andExpect(jsonPath("$.name").value(product.getName()));
+                .andExpect(jsonPath("$.id").value(productV1.getId()))
+                .andExpect(jsonPath("$.name").value(productV1.getName()));
     }
 
     @Test
     void shouldGetAllProducts() throws Exception {
 
         Pageable pageable = PageRequest.of(0, 10);
-        Page<Product> productPage = new PageImpl<>(List.of(product), pageable, 1);
+        Page<ProductV1> productPage = new PageImpl<>(List.of(productV1), pageable, 1);
         when(productService.findAll(any(Pageable.class))).thenReturn(productPage);
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content[0].id").value(product.getId()))
-                .andExpect(jsonPath("$.content[0].name").value(product.getName()))
+                .andExpect(jsonPath("$.content[0].id").value(productV1.getId()))
+                .andExpect(jsonPath("$.content[0].name").value(productV1.getName()))
                 .andExpect(jsonPath("$.content",hasSize(1)));
     }
 
     @Test
     void shouldGetProductById() throws Exception {
-        when(productService.findById(1L)).thenReturn(Optional.of(product));
+        when(productService.findById(1L)).thenReturn(Optional.of(productV1));
 
         mockMvc.perform(get("/api/products/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(product.getId()))
-                .andExpect(jsonPath("$.name").value(product.getName()));
+                .andExpect(jsonPath("$.id").value(productV1.getId()))
+                .andExpect(jsonPath("$.name").value(productV1.getName()));
     }
 
     @Test
@@ -99,15 +99,15 @@ public class ProductControllerTest {
 
     @Test
     void shouldUpdateProduct() throws Exception {
-        when(productService.findById(1L)).thenReturn(Optional.of(product));
-        when(productService.save(any(Product.class))).thenReturn(product);
+        when(productService.findById(1L)).thenReturn(Optional.of(productV1));
+        when(productService.save(any(ProductV1.class))).thenReturn(productV1);
 
         mockMvc.perform(put("/api/products/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(product)))
+                .content(objectMapper.writeValueAsString(productV1)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(product.getId()))
-                .andExpect(jsonPath("$.name").value(product.getName()));
+                .andExpect(jsonPath("$.id").value(productV1.getId()))
+                .andExpect(jsonPath("$.name").value(productV1.getName()));
     }
 
     @Test
@@ -116,13 +116,13 @@ public class ProductControllerTest {
 
         mockMvc.perform(put("/api/products/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(product)))
+                .content(objectMapper.writeValueAsString(productV1)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void shouldDeleteProduct() throws Exception {
-        when(productService.findById(1L)).thenReturn(Optional.of(product));
+        when(productService.findById(1L)).thenReturn(Optional.of(productV1));
         doNothing().when(productService).deleteById(1L);
 
         mockMvc.perform(delete("/api/products/1"))

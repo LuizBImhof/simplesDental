@@ -1,7 +1,7 @@
 package com.simplesdental.product.service;
 
 import com.simplesdental.product.model.Category;
-import com.simplesdental.product.model.Product;
+import com.simplesdental.product.model.Product.ProductV1;
 import com.simplesdental.product.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductServiceTest {
+public class ProductV1ServiceTest {
 
     @Mock
     private ProductRepository productRepository;
@@ -31,39 +31,39 @@ public class ProductServiceTest {
     @InjectMocks
     private ProductService productService;
 
-    private Product product;
+    private ProductV1 productV1;
 
     @BeforeEach
     void setUp() {
-        product = new Product();
-        product.setId(1L);
-        product.setName("Test Product");
-        product.setDescription("Test Description");
-        product.setPrice(new BigDecimal("19.99"));
-        product.setStatus(true);
-        product.setCode("TP001");
-        product.setCategory(new Category());
+        productV1 = new ProductV1();
+        productV1.setId(1L);
+        productV1.setName("Test Product");
+        productV1.setDescription("Test Description");
+        productV1.setPrice(new BigDecimal("19.99"));
+        productV1.setStatus(true);
+        productV1.setCode("TP001");
+        productV1.setCategory(new Category());
     }
 
     @Test
     void shouldSaveProduct() {
-        when(productRepository.save(any(Product.class))).thenReturn(product);
+        when(productRepository.save(any(ProductV1.class))).thenReturn(productV1);
 
-        Product savedProduct = productService.save(product);
+        ProductV1 savedProductV1 = productService.save(productV1);
 
-        assertThat(savedProduct).isNotNull();
-        assertThat(savedProduct.getId()).isEqualTo(1L);
-        assertThat(savedProduct.getName()).isEqualTo("Test Product");
-        verify(productRepository, times(1)).save(any(Product.class));
+        assertThat(savedProductV1).isNotNull();
+        assertThat(savedProductV1.getId()).isEqualTo(1L);
+        assertThat(savedProductV1.getName()).isEqualTo("Test Product");
+        verify(productRepository, times(1)).save(any(ProductV1.class));
     }
 
     @Test
     void shouldGetAllProducts() {
         Pageable pageable = PageRequest.of(0,10);
-        Page<Product> productPage = new PageImpl<>(List.of(product));
+        Page<ProductV1> productPage = new PageImpl<>(List.of(productV1));
         when(productRepository.findAll(any(Pageable.class))).thenReturn(productPage);
 
-        Page<Product> products = productService.findAll(pageable);
+        Page<ProductV1> products = productService.findAll(pageable);
 
         assertThat(products).isNotNull();
         assertThat(products.getContent().size()).isEqualTo(1);
@@ -72,9 +72,9 @@ public class ProductServiceTest {
 
     @Test
     void shouldGetProductById() {
-        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+        when(productRepository.findById(1L)).thenReturn(Optional.of(productV1));
 
-        Optional<Product> foundProduct = productService.findById(1L);
+        Optional<ProductV1> foundProduct = productService.findById(1L);
 
         assertThat(foundProduct).isPresent();
         assertThat(foundProduct.get().getId()).isEqualTo(1L);

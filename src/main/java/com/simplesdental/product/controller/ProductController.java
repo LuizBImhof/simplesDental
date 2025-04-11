@@ -1,6 +1,6 @@
 package com.simplesdental.product.controller;
 
-import com.simplesdental.product.model.Product;
+import com.simplesdental.product.model.Product.ProductV1;
 import com.simplesdental.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;
@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -28,8 +26,8 @@ public class ProductController {
 
     @GetMapping
     @Transactional
-    public Page<Product> getAllProducts(@PageableDefault(size = 10, sort = "name")Pageable pageable) {
-        Page<Product> products = productService.findAll(pageable);
+    public Page<ProductV1> getAllProducts(@PageableDefault(size = 10, sort = "name")Pageable pageable) {
+        Page<ProductV1> products = productService.findAll(pageable);
         products.forEach(product -> {
             if (product.getCategory() != null) {
                 Hibernate.initialize(product.getCategory());
@@ -39,7 +37,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductV1> getProductById(@PathVariable Long id) {
         return productService.findById(id)
                 .map(product -> {
                     if (product.getCategory() != null) {
@@ -52,16 +50,16 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product createProduct(@Valid @RequestBody Product product) {
-        return productService.save(product);
+    public ProductV1 createProduct(@Valid @RequestBody ProductV1 productV1) {
+        return productService.save(productV1);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
+    public ResponseEntity<ProductV1> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductV1 productV1) {
         return productService.findById(id)
                 .map(existingProduct -> {
-                    product.setId(id);
-                    return ResponseEntity.ok(productService.save(product));
+                    productV1.setId(id);
+                    return ResponseEntity.ok(productService.save(productV1));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
