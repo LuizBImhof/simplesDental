@@ -1,6 +1,7 @@
 package com.simplesdental.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simplesdental.product.model.Category;
 import com.simplesdental.product.model.Product;
 import com.simplesdental.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,6 +50,7 @@ public class ProductControllerTest {
         product.setPrice(new BigDecimal("19.99"));
         product.setStatus(true);
         product.setCode("TP001");
+        product.setCategory(new Category());
     }
 
     @Test

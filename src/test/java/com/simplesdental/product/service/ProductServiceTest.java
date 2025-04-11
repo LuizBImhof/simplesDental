@@ -1,5 +1,6 @@
 package com.simplesdental.product.service;
 
+import com.simplesdental.product.model.Category;
 import com.simplesdental.product.model.Product;
 import com.simplesdental.product.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +42,7 @@ public class ProductServiceTest {
         product.setPrice(new BigDecimal("19.99"));
         product.setStatus(true);
         product.setCode("TP001");
+        product.setCategory(new Category());
     }
 
     @Test
