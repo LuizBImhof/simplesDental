@@ -1,5 +1,6 @@
 package com.simplesdental.product.model.Product;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -7,6 +8,7 @@ import jakarta.persistence.Table;
 @Table(name = "products")
 public class ProductV2 extends BaseProduct {
 
+    @Column(name = "code_v2")
     private Long code;
 
     public Long getCode() {

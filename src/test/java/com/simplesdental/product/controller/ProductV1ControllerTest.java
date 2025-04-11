@@ -54,15 +54,13 @@ public class ProductV1ControllerTest {
     }
 
     @Test
-    void shouldCreateProduct() throws Exception {
+    void shouldNotCreateProductV1() throws Exception {
         when(productService.save(any(ProductV1.class))).thenReturn(productV1);
 
         mockMvc.perform(post("/api/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(productV1)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(productV1.getId()))
-                .andExpect(jsonPath("$.name").value(productV1.getName()));
+                .andExpect(status().isMethodNotAllowed());
     }
 
     @Test

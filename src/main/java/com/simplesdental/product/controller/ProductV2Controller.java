@@ -1,7 +1,8 @@
 package com.simplesdental.product.controller;
 
-import com.simplesdental.product.model.Product.ProductV1;
+import com.simplesdental.product.model.Product.ProductV2;
 import com.simplesdental.product.service.ProductService;
+import com.simplesdental.product.service.ProductV2Service;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +15,20 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/products")
-public class ProductController {
+@RequestMapping("/api/v2/products")
+public class ProductV2Controller {
 
-    private final ProductService productService;
+    private final ProductV2Service productService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductV2Controller(ProductV2Service productService) {
         this.productService = productService;
     }
 
     @GetMapping
     @Transactional
-    public Page<ProductV1> getAllProducts(@PageableDefault(size = 10, sort = "name")Pageable pageable) {
-        Page<ProductV1> products = productService.findAll(pageable);
+    public Page<ProductV2> getAllProducts(@PageableDefault(size = 10, sort = "name")Pageable pageable) {
+        Page<ProductV2> products = productService.findAll(pageable);
         products.forEach(product -> {
             if (product.getCategory() != null) {
                 Hibernate.initialize(product.getCategory());
@@ -37,7 +38,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductV1> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductV2> getProductById(@PathVariable Long id) {
         return productService.findById(id)
                 .map(product -> {
                     if (product.getCategory() != null) {
@@ -48,12 +49,18 @@ public class ProductController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ProductV2 createProduct(@Valid @RequestBody ProductV2 productV2) {
+        return productService.save(productV2);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<ProductV1> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductV1 productV1) {
+    public ResponseEntity<ProductV2> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductV2 productV2) {
         return productService.findById(id)
                 .map(existingProduct -> {
-                    productV1.setId(id);
-                    return ResponseEntity.ok(productService.save(productV1));
+                    productV2.setId(id);
+                    return ResponseEntity.ok(productService.save(productV2));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
