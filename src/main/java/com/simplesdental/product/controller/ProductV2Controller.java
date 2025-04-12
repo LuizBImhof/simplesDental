@@ -1,8 +1,9 @@
 package com.simplesdental.product.controller;
 
+import com.simplesdental.product.controller.docs.ProductV2SwaggerDefinition;
 import com.simplesdental.product.model.Product.ProductV2;
-import com.simplesdental.product.service.ProductService;
 import com.simplesdental.product.service.ProductV2Service;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v2/products")
-public class ProductV2Controller {
+public class ProductV2Controller implements ProductV2SwaggerDefinition {
 
     private final ProductV2Service productService;
 
