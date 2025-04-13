@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -53,16 +54,18 @@ public class ProductV1ControllerTest {
         productV1.setCategory(new Category());
     }
 
+    @WithMockUser(username = "teste@teste.com", roles = "ADMIN")
     @Test
     void shouldNotCreateProductV1() throws Exception {
         when(productService.save(any(ProductV1.class))).thenReturn(productV1);
 
         mockMvc.perform(post("/api/products")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productV1)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productV1)))
                 .andExpect(status().isMethodNotAllowed());
     }
 
+    @WithMockUser(username = "teste@teste.com", roles = "USER")
     @Test
     void shouldGetAllProducts() throws Exception {
 
@@ -77,6 +80,8 @@ public class ProductV1ControllerTest {
                 .andExpect(jsonPath("$.content",hasSize(1)));
     }
 
+
+    @WithMockUser(username = "teste@teste.com", roles = "USER")
     @Test
     void shouldGetProductById() throws Exception {
         when(productService.findById(1L)).thenReturn(Optional.of(productV1));
@@ -87,6 +92,7 @@ public class ProductV1ControllerTest {
                 .andExpect(jsonPath("$.name").value(productV1.getName()));
     }
 
+    @WithMockUser(username = "teste@teste.com", roles = "USER")
     @Test
     void shouldReturn404WhenGetProductByIdNotFound() throws Exception {
         when(productService.findById(1L)).thenReturn(Optional.empty());
@@ -95,29 +101,32 @@ public class ProductV1ControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    @WithMockUser(username = "teste@teste.com", roles = "ADMIN")
     @Test
     void shouldUpdateProduct() throws Exception {
         when(productService.findById(1L)).thenReturn(Optional.of(productV1));
         when(productService.save(any(ProductV1.class))).thenReturn(productV1);
 
         mockMvc.perform(put("/api/products/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productV1)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productV1)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(productV1.getId()))
                 .andExpect(jsonPath("$.name").value(productV1.getName()));
     }
 
+    @WithMockUser(username = "teste@teste.com", roles = "ADMIN")
     @Test
     void shouldReturn404WhenUpdateProductNotFound() throws Exception {
         when(productService.findById(1L)).thenReturn(Optional.empty());
 
         mockMvc.perform(put("/api/products/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(productV1)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productV1)))
                 .andExpect(status().isNotFound());
     }
 
+    @WithMockUser(username = "teste@teste.com", roles = "ADMIN")
     @Test
     void shouldDeleteProduct() throws Exception {
         when(productService.findById(1L)).thenReturn(Optional.of(productV1));
@@ -127,6 +136,7 @@ public class ProductV1ControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @WithMockUser(username = "teste@teste.com", roles = "ADMIN")
     @Test
     void shouldReturn404WhenDeleteProductNotFound() throws Exception {
         when(productService.findById(1L)).thenReturn(Optional.empty());
