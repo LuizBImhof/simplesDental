@@ -2,6 +2,7 @@ package com.simplesdental.product.controller;
 
 import com.simplesdental.product.model.Product.ProductV1;
 import com.simplesdental.product.service.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/products")
 @EnableWebSecurity
 @EnableMethodSecurity
+@SecurityRequirement(name = "bearerAuth")
 public class ProductController {
 
     private final ProductService productService;

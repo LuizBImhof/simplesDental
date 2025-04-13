@@ -2,6 +2,7 @@ package com.simplesdental.product.controller;
 
 import com.simplesdental.product.model.Category;
 import com.simplesdental.product.service.CategoryService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/categories")
 @EnableWebSecurity
 @EnableMethodSecurity
+@SecurityRequirement(name = "bearerAuth")
 public class CategoryController {
 
     private final CategoryService categoryService;
