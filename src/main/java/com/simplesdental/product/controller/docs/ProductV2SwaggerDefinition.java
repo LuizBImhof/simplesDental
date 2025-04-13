@@ -3,10 +3,12 @@ package com.simplesdental.product.controller.docs;
 import com.simplesdental.product.model.Product.ProductV2;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.web.bind.annotation.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,6 +23,12 @@ import static com.simplesdental.product.Utils.ProductV2Examples.*;
 
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "Product API", version = "v2", description = "API for managing products"))
+@SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        scheme = "bearer",
+        bearerFormat = "JWT"
+)
 public interface ProductV2SwaggerDefinition {
 
     @Operation(summary = "List of all Products (v2)", description = "Return a pageable list of all products and it's categories.")
@@ -28,7 +36,8 @@ public interface ProductV2SwaggerDefinition {
             @ApiResponse(responseCode = "200",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProductV2.class),
-                            examples = @ExampleObject(name = "Pageable response example", value = PAGE_RETURN_EXAMPLE)))
+                            examples = @ExampleObject(name = "Pageable response example", value = PAGE_RETURN_EXAMPLE))),
+            @ApiResponse(responseCode = "403", content = @Content())
     })
     @GetMapping
     Page<ProductV2> getAllProducts(@ParameterObject Pageable pageable);
@@ -39,7 +48,8 @@ public interface ProductV2SwaggerDefinition {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProductV2.class),
                             examples = @ExampleObject(name = "Return single Product", value = RETURN_SINGLE_PRODUCT_EXAMPLE))),
-            @ApiResponse(responseCode = "404", content = @Content())
+            @ApiResponse(responseCode = "404", content = @Content()),
+            @ApiResponse(responseCode = "403", content = @Content())
     })
     @GetMapping("/{id}")
     ResponseEntity<ProductV2> getProductById(@PathVariable Long id);
@@ -50,7 +60,8 @@ public interface ProductV2SwaggerDefinition {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProductV2.class),
                             examples = @ExampleObject(name = "Product created", value = RETURN_SINGLE_PRODUCT_EXAMPLE))),
-            @ApiResponse(responseCode = "500", content = @Content())
+            @ApiResponse(responseCode = "500", content = @Content()),
+            @ApiResponse(responseCode = "403", content = @Content())
     })
     @PostMapping
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Product data to be created",
@@ -66,7 +77,8 @@ public interface ProductV2SwaggerDefinition {
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = ProductV2.class),
                             examples = @ExampleObject(name = "Updated product", value = RETURN_SINGLE_PRODUCT_EXAMPLE))),
-            @ApiResponse(responseCode = "404", content = @Content())
+            @ApiResponse(responseCode = "404", content = @Content()),
+            @ApiResponse(responseCode = "403", content = @Content())
     })
     @PutMapping("/{id}")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Product data to be updated",
@@ -79,7 +91,8 @@ public interface ProductV2SwaggerDefinition {
     @Operation(summary = "Delete a product (v2)", description = "Permanently remove a product from the database based on the passed id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204"),
-            @ApiResponse(responseCode = "404")
+            @ApiResponse(responseCode = "404"),
+            @ApiResponse(responseCode = "403")
     })
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteProduct(@PathVariable Long id);
