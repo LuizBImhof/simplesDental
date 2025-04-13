@@ -70,7 +70,6 @@
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>8.0.1.Final</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.validation</groupId>
