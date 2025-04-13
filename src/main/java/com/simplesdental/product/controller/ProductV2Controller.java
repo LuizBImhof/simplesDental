@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v2/products")
-@EnableWebSecurity
-@EnableMethodSecurity
 @SecurityRequirement(name = "bearerAuth")
 public class ProductV2Controller implements ProductV2SwaggerDefinition {
 

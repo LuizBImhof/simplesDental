@@ -19,8 +19,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/categories")
-@EnableWebSecurity
-@EnableMethodSecurity
 @SecurityRequirement(name = "bearerAuth")
 public class CategoryController {
 
